@@ -16,3 +16,8 @@ export const insertar_deudores = async (deudor, t) => {
         bind: [deudor]
     });
 }
+
+export const consultar_deudores = async () => {
+    let query = `select * from tal_deudores td`;
+    return await sequel.query(query, { type: QueryTypes.SELECT });
+}

@@ -25,3 +25,15 @@ export const insertar_deudores = async (req, res) => {
         res.status(500).send({ message: process.env.MENSAJE_NOK });
     }
 }
+
+export const consultar_deudores = async (req, res) => {
+    console.log('SERVICE [consultar_deudores]')
+    try {
+        const listado = await deudores.consultar_deudores()
+        return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
+
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
