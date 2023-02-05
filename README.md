@@ -9,5 +9,7 @@ API de prueba para deudores en NodeJS
 * npm i -D nodemon
 * npm i dotenv
 * npm i cross-env
+* npm i sequelize
+* npm install pg --save
 
 
