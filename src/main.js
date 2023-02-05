@@ -6,7 +6,7 @@ const app = express();
 
 app.use(expressConfig);
 
-const port = process.env.EXPRESS_PORT || 5002;
+const port = process.env.EXPRESS_PORT || 5000;
 
 app.listen(port, () =>
 	console.log(`Aplicación corriendo en el puerto ${port}`)
