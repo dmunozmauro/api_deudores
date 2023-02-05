@@ -1,9 +1,12 @@
 import * as prueba from './prueba'
+import * as deudores from './deudores'
 
 export {
-    prueba
+    prueba,
+    deudores
 }
 
 export default {
-    prueba
+    prueba,
+    deudores
 }
