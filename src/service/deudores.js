@@ -30,7 +30,7 @@ export const consultar_deudores = async (req, res) => {
     console.log('SERVICE [consultar_deudores]')
     try {
         const listado = await deudores.consultar_deudores()
-        return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
+        return res.status(200).send(listado);
 
     } catch (e) {
         console.log(e.message);
