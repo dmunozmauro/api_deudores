@@ -2,14 +2,12 @@
 API de prueba para deudores en NodeJS
 
 
-## INSTALACIONES
-* npm init
-* npm install 
-* npm install --save express
+## INSTALACIONES 
+* npm i --save express
 * npm i -D nodemon
 * npm i dotenv
 * npm i cross-env
 * npm i sequelize
-* npm install pg --save
+* npm i pg --save
 
 

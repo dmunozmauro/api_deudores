@@ -21,3 +21,24 @@ export const consultar_deudores = async () => {
     let query = `select * from tal_deudores td`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
+
+export const eliminar_deudores = async (id, t) => {
+    let query = `delete from tal_deudores where id = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.DELETE,
+        transaction: t,
+        bind: [id]
+    });
+}
+
+
+export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
+    let query = `update tal_deudores set id_compra = $2 where id = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.INSERT,
+        transaction: t,
+        bind: [id_deudor, id_compra]
+    });
+}

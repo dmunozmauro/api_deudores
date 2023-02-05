@@ -37,3 +37,36 @@ export const consultar_deudores = async (req, res) => {
         res.status(500).send({ message: process.env.MENSAJE_NOK });
     }
 }
+
+export const eliminar_deudores = async (req, res) => {
+    console.log('SERVICE [eliminar_deudores]')
+    const { id } = req.body
+    const transaction = await sequel.transaction()
+    try {
+        await deudores.eliminar_deudores(id, transaction)
+        await transaction.commit()
+        return res.status(200).send({ message: process.env.MENSAJE_OK });
+
+    } catch (e) {
+        await transaction.rollback()
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
+
+export const rel_deudor_compra = async (req, res) => {
+    console.log('SERVICE [rel_deudor_compra]')
+    const { id_deudor, id_compra } = req.body
+    const transaction = await sequel.transaction()
+    try {
+
+        await deudores.rel_deudor_compra(id_deudor, id_compra, transaction)
+        await transaction.commit()
+        return res.status(200).send({ message: process.env.MENSAJE_OK });
+
+    } catch (e) {
+        await transaction.rollback()
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
