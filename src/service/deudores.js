@@ -45,12 +45,12 @@ export const eliminar_deudores = async (req, res) => {
     try {
         await deudores.eliminar_deudores(id, transaction)
         await transaction.commit()
-        return res.status(200).send({ message: process.env.MENSAJE_OK });
+        return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
 
     } catch (e) {
         await transaction.rollback()
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, cod: 2 });
     }
 }
 
