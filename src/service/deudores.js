@@ -3,26 +3,26 @@ import { sequel } from '../database'
 
 export const insertar_deudores = async (req, res) => {
     console.log('SERVICE [insertar_deudores]')
-    const { nombre_deudor } = req.body
+    const { deudor } = req.body
     const transaction = await sequel.transaction()
     try {
 
-        let deudor = nombre_deudor.toUpperCase()
+        let nombre_deudor = deudor.toUpperCase()
 
-        const valida_deudor = await deudores.valida_deudor(deudor)
+        const valida_deudor = await deudores.valida_deudor(nombre_deudor)
 
         if (valida_deudor.length > 0) {
-            return res.status(200).send({ message: 'Ya existe deudor ingresado' });
+            return res.status(200).send({ message: 'Ya existe deudor ingresado', code: 2 });
         }
 
-        await deudores.insertar_deudores(deudor, transaction)
+        await deudores.insertar_deudores(nombre_deudor, transaction)
         await transaction.commit()
-        return res.status(200).send({ message: process.env.MENSAJE_OK });
+        return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
 
     } catch (e) {
         await transaction.rollback()
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: 2 });
     }
 }
 
