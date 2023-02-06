@@ -7,18 +7,19 @@ export const valida_compras = async (producto) => {
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
 
-export const insertar_compras = async (producto, valor, t) => {
-    let query = `insert into tal_compras(producto, valor) values($1, $2)`;
+export const insertar_compras = async (producto, valor, id_cuotas, t) => {
+    let query = `insert into tal_compras(producto, valor, id_cuotas) values($1, $2, $3)`;
 
     return await sequel.query(query, {
         type: QueryTypes.INSERT,
         transaction: t,
-        bind: [producto, valor]
+        bind: [producto, valor, id_cuotas]
     });
 }
 
 export const consultar_compras = async () => {
-    let query = `select * from tal_compras tc`;
+    let query = `select * from tal_compras tc 
+                    inner join tal_cuotas tcu on tcu.id = tc.id_cuotas`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
 

@@ -1,9 +1,9 @@
-import { compras } from '../database/dao'
+import { compras, cuotas } from '../database/dao'
 import { sequel } from '../database'
 
 export const insertar_compras = async (req, res) => {
     console.log('SERVICE [insertar_compras]')
-    const { producto, valor } = req.body
+    const { producto, valor, cantidad_cuotas, cuotas_pagadas } = req.body
     const transaction = await sequel.transaction()
     try {
 
@@ -15,7 +15,9 @@ export const insertar_compras = async (req, res) => {
             return res.status(200).send({ message: 'Ya existe compra ingresada' });
         }
 
-        await compras.insertar_compras(compra, valor, transaction)
+        const id_cuota = await cuotas.insertar_cuotas(cantidad_cuotas, cuotas_pagadas, transaction)
+
+        await compras.insertar_compras(compra, valor, id_cuota[0][0].id, transaction)
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK });
 
