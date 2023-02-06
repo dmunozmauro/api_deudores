@@ -1,5 +1,5 @@
 import express from 'express'
-import healthRoute from './health-route'
+import health from './health'
 import prueba from './prueba'
 import deudores from './deudores'
 import compras from './compras'
@@ -7,7 +7,7 @@ import compras from './compras'
 const app = express()
 
 app.use(
-    healthRoute,
+    health,
     prueba,
     deudores,
     compras
