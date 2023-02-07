@@ -18,7 +18,12 @@ export const insertar_deudores = async (deudor, t) => {
 }
 
 export const consultar_deudores = async () => {
-    let query = `select * from tal_deudores td`;
+    let query = `select 
+                    td.id,
+                    td.deudor,
+                    rdc.id_compra 
+                    from tal_deudores td
+                    left join rel_deudores_compras rdc on rdc.id_deudor = td.id`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
 
@@ -34,7 +39,8 @@ export const eliminar_deudores = async (id, t) => {
 
 
 export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
-    let query = `update tal_deudores set id_compra = $2 where id = $1`;
+    // let query = `update tal_deudores set id_compra = $2 where id = $1`;
+    let query = `insert into rel_deudores_compras(id_deudor, id_compra) values($1, $2)`;
 
     return await sequel.query(query, {
         type: QueryTypes.INSERT,

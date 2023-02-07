@@ -56,11 +56,10 @@ export const eliminar_deudores = async (req, res) => {
 
 export const rel_deudor_compra = async (req, res) => {
     console.log('SERVICE [rel_deudor_compra]')
-    console.log(req.body)
-    /* const { id_deudor, id_compra } = req.body
+    const { id_deudor, id_compra } = req.body
+
     const transaction = await sequel.transaction()
     try {
-
         await deudores.rel_deudor_compra(id_deudor, id_compra, transaction)
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK });
@@ -69,5 +68,5 @@ export const rel_deudor_compra = async (req, res) => {
         await transaction.rollback()
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK });
-    } */
+    }
 }
