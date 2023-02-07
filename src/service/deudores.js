@@ -56,7 +56,8 @@ export const eliminar_deudores = async (req, res) => {
 
 export const rel_deudor_compra = async (req, res) => {
     console.log('SERVICE [rel_deudor_compra]')
-    const { id_deudor, id_compra } = req.body
+    console.log(req.body)
+    /* const { id_deudor, id_compra } = req.body
     const transaction = await sequel.transaction()
     try {
 
@@ -68,5 +69,5 @@ export const rel_deudor_compra = async (req, res) => {
         await transaction.rollback()
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK });
-    }
+    } */
 }

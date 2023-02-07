@@ -52,9 +52,25 @@ export const eliminar_compras = async (req, res) => {
         await compras.eliminar_compras(id, transaction)
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK });
-
+        
     } catch (e) {
         await transaction.rollback()
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
+
+export const compras_no_asociadas = async (req, res) => {
+    console.log('SERVICE [compras_no_asociadas]')
+    try {
+        const listado = await compras.compras_no_asociadas()
+
+        if (listado.length > 0) {
+            return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
+        }
+
+        return res.status(200).send({ message: 'No existen compras' });
+    } catch (e) {
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK });
     }

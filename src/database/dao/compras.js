@@ -32,3 +32,19 @@ export const eliminar_compras = async (id, t) => {
         bind: [id]
     });
 }
+
+export const compras_no_asociadas = async () => {
+    let query = `select 
+                    tc.id as id_compra,
+                    tc.producto,
+                    tc.valor,
+                    tcu.id as id_cuotas,
+                    tcu.cantidad_cuotas,
+                    tcu.cuotas_pagadas,
+                    tcu.fecha_pago
+                    from tal_compras tc
+                    inner join tal_cuotas tcu on tcu.id = tc.id_cuotas
+                    left join rel_deudores_compras rdc on rdc.id_compra = tc.id
+                    where rdc.id_compra is null`;
+    return await sequel.query(query, { type: QueryTypes.SELECT });
+}
