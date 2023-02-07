@@ -17,6 +17,35 @@ export const insertar_compras = async (producto, valor, id_cuotas, es_servicio, 
     });
 }
 
+export const editar_compras = async (id, compra, valor, es_servicio, t) => {
+    let query = `update tal_compras set producto = $2, valor = $3, es_servicio = $4 where id = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.UPDATE,
+        transaction: t,
+        bind: [id, compra, valor, es_servicio]
+    });
+}
+
+export const editar_cuotas = async (id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota, t) => {
+    let query = `update tal_cuotas set cantidad_cuotas = $2, cuotas_pagadas = $3, valor_cuota = $4 where id = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.UPDATE,
+        transaction: t,
+        bind: [id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota]
+    });
+}
+
+export const obtener_deudor = async (id) => {
+    let query = `select rdc.id_deudor from rel_deudores_compras rdc where rdc.id_compra = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.SELECT,
+        bind: [id]
+    });
+}
+
 export const consultar_compras = async () => {
     let query = `select
                     tc.id,
@@ -35,6 +64,27 @@ export const consultar_compras = async () => {
                     left join tal_cuotas tcu on tcu.id = tc.id_cuotas
                 order by tc.producto asc`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
+}
+
+export const consulta_compra = async (id) => {
+    let query = `select
+                    tc.id,
+                    tc.producto,
+                    tc.valor,
+                    tc.es_servicio,
+                    tc.id_cuotas,
+                    tcu.cantidad_cuotas,
+                    tcu.cuotas_pagadas,
+                    tcu.fecha_pago,
+                    case
+                        when tcu.valor_cuota is not null then tcu.valor_cuota 
+                        else tc.valor
+                        end as valor_cuota
+                from tal_compras tc 
+                    left join tal_cuotas tcu on tcu.id = tc.id_cuotas
+                where tc.id = $1
+                order by tc.producto asc`;
+    return await sequel.query(query, { type: QueryTypes.SELECT, bind: [id] });
 }
 
 export const eliminar_compras = async (id, t) => {

@@ -34,10 +34,51 @@ export const insertar_compras = async (req, res) => {
     }
 }
 
+export const editar_compras = async (req, res) => {
+    console.log('SERVICE [editar_compras]')
+
+    const { id, producto, valor, es_servicio, id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota } = req.body
+    const transaction = await sequel.transaction()
+    try {
+
+        let compra = producto.toUpperCase()
+
+        await compras.editar_compras(id, compra, valor, es_servicio, transaction)
+        await compras.editar_cuotas(id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota, transaction)
+
+        const deudor = await compras.obtener_deudor(id)
+
+        await transaction.commit()
+        return res.status(200).send({ message: process.env.MENSAJE_OK, deudor: deudor[0].id_deudor });
+
+    } catch (e) {
+        await transaction.rollback()
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
+
 export const consultar_compras = async (req, res) => {
     console.log('SERVICE [consultar_compras]')
     try {
         const listado = await compras.consultar_compras()
+
+        if (listado.length > 0) {
+            return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
+        }
+
+        return res.status(200).send({ message: 'No existen compras' });
+    } catch (e) {
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
+
+export const consulta_compra = async (req, res) => {
+    console.log('SERVICE [consulta_compra]')
+    const { id } = req.params;
+    try {
+        const listado = await compras.consulta_compra(id)
 
         if (listado.length > 0) {
             return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
@@ -107,7 +148,7 @@ export const compras_realizadas_deudor = async (req, res) => {
         console.log(listado)
 
         return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado });
-        
+
     } catch (e) {
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK });
