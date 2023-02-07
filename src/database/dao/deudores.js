@@ -20,10 +20,8 @@ export const insertar_deudores = async (deudor, t) => {
 export const consultar_deudores = async () => {
     let query = `select 
                     td.id,
-                    td.deudor,
-                    rdc.id_compra 
+                    td.deudor
                     from tal_deudores td
-                    left join rel_deudores_compras rdc on rdc.id_deudor = td.id
                     order by td.deudor asc`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
