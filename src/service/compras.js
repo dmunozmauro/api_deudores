@@ -66,6 +66,22 @@ export const eliminar_compras = async (req, res) => {
     }
 }
 
+export const eliminar_compra_deudor = async (req, res) => {
+    console.log('SERVICE [eliminar_compra_deudor]')
+    const { id } = req.body
+    const transaction = await sequel.transaction()
+    try {
+        await compras.eliminar_compra_deudor(id, transaction)
+        await transaction.commit()
+        return res.status(200).send({ message: process.env.MENSAJE_OK });
+
+    } catch (e) {
+        await transaction.rollback()
+        console.log(e.message);
+        res.status(500).send({ message: process.env.MENSAJE_NOK });
+    }
+}
+
 export const compras_no_asociadas = async (req, res) => {
     console.log('SERVICE [compras_no_asociadas]')
     try {

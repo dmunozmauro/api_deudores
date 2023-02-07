@@ -43,9 +43,12 @@ export const eliminar_deudores = async (req, res) => {
     const { id } = req.body
     const transaction = await sequel.transaction()
     try {
-        await deudores.eliminar_deudores(id, transaction)
-        await transaction.commit()
-        return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
+
+        const valida_pendientes_deudor = await deudores.valida_pendientes_deudor(id)
+
+        // await deudores.eliminar_deudores(id, transaction)
+        // await transaction.commit()
+        // return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
 
     } catch (e) {
         await transaction.rollback()
