@@ -18,9 +18,22 @@ export const insertar_compras = async (producto, valor, id_cuotas, es_servicio, 
 }
 
 export const consultar_compras = async () => {
-    let query = `select * from tal_compras tc 
+    let query = `select
+                    tc.id,
+                    tc.producto,
+                    tc.valor,
+                    tc.es_servicio,
+                    tc.id_cuotas,
+                    tcu.cantidad_cuotas,
+                    tcu.cuotas_pagadas,
+                    tcu.fecha_pago,
+                    case
+                        when tcu.valor_cuota is not null then tcu.valor_cuota 
+                        else tc.valor
+                        end as valor_cuota
+                from tal_compras tc 
                     left join tal_cuotas tcu on tcu.id = tc.id_cuotas
-                    order by tc.producto asc`;
+                order by tc.producto asc`;
     return await sequel.query(query, { type: QueryTypes.SELECT });
 }
 
@@ -70,7 +83,10 @@ export const compras_realizadas_deudor = async (id) => {
                     tcu.cantidad_cuotas,
                     tcu.cuotas_pagadas,
                     tcu.fecha_pago,
-                    tcu.valor_cuota
+                    case
+                        when tcu.valor_cuota is not null then tcu.valor_cuota 
+                        else tc.valor
+                    end as valor_cuota
                 from tal_compras tc 
                     left join tal_cuotas tcu on tcu.id = tc.id_cuotas  
                     left join rel_deudores_compras rdc on rdc.id_compra = tc.id
