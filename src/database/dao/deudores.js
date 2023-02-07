@@ -48,3 +48,14 @@ export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
         bind: [id_deudor, id_compra]
     });
 }
+
+
+export const valida_pendientes_deudor = async (id) => {
+    let query = `insert into rel_deudores_compras(id_deudor, id_compra) values($1, $2)`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.INSERT,
+        transaction: t,
+        bind: [id_deudor, id_compra]
+    });
+}
