@@ -17,23 +17,13 @@ export const insertar_compras = async (producto, valor, es_servicio, cantidad_cu
     });
 }
 
-export const editar_compras = async (id, compra, valor, es_servicio, t) => {
-    let query = `update tal_compras set producto = $2, valor = $3, es_servicio = $4 where id = $1`;
+export const editar_compras = async (id, compra, valor, es_servicio, cantidad_cuotas, cuotas_pagadas, valor_cuota, t) => {
+    let query = `update tal_compras set producto = $2, valor = $3, es_servicio = $4, cantidad_cuotas = $5, cuotas_pagadas = $6, valor_cuota = $7 where id = $1`;
 
     return await sequel.query(query, {
         type: QueryTypes.UPDATE,
         transaction: t,
-        bind: [id, compra, valor, es_servicio]
-    });
-}
-
-export const editar_cuotas = async (id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota, t) => {
-    let query = `update tal_cuotas set cantidad_cuotas = $2, cuotas_pagadas = $3, valor_cuota = $4 where id = $1`;
-
-    return await sequel.query(query, {
-        type: QueryTypes.UPDATE,
-        transaction: t,
-        bind: [id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota]
+        bind: [id, compra, valor, es_servicio, cantidad_cuotas, cuotas_pagadas, valor_cuota]
     });
 }
 
@@ -70,16 +60,14 @@ export const consulta_compra = async (id) => {
                     tc.producto,
                     tc.valor,
                     tc.es_servicio,
-                    tc.id_cuotas,
-                    tcu.cantidad_cuotas,
-                    tcu.cuotas_pagadas,
-                    tcu.fecha_pago,
+                    tc.cantidad_cuotas,
+                    tc.cuotas_pagadas,
+                    tc.ultima_fecha_pago,
                     case
-                        when tcu.valor_cuota is not null then tcu.valor_cuota 
+                        when tc.valor_cuota is not null then tc.valor_cuota 
                         else tc.valor
                         end as valor_cuota
                 from tal_compras tc 
-                    left join tal_cuotas tcu on tcu.id = tc.id_cuotas
                 where tc.id = $1
                 order by tc.producto asc`;
     return await sequel.query(query, { type: QueryTypes.SELECT, bind: [id] });
@@ -153,15 +141,14 @@ export const valida_pendientes_compras = async (id_compra) => {
                     tc.valor,
                     tc.id_cuotas,
                     tc.es_servicio,
-                    tcu.cantidad_cuotas,
-                    tcu.cuotas_pagadas,
-                    tcu.valor_cuota,
+                    tc.cantidad_cuotas,
+                    tc.cuotas_pagadas,
+                    tc.valor_cuota,
                     case
-                        when tcu.cuotas_pagadas < tcu.cantidad_cuotas then false
+                        when tc.cuotas_pagadas < tc.cantidad_cuotas then false
                         else true
                     end as deuda_terminada
                 from tal_compras tc 
-                    left join tal_cuotas tcu on tcu.id = tc.id_cuotas
                 where tc.id = $1`;
 
     const data = await sequel.query(query, {

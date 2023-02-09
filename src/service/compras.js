@@ -24,8 +24,8 @@ export const insertar_compras = async (req, res) => {
             (!es_servicio) ? cuotas_pagadas : null,
             (!es_servicio) ? valor_cuota : null,
             transaction
-        
-            )
+        )
+
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
@@ -39,14 +39,23 @@ export const insertar_compras = async (req, res) => {
 export const editar_compras = async (req, res) => {
     console.log('SERVICE [editar_compras]')
 
-    const { id, producto, valor, es_servicio, id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota } = req.body
+    const { id, producto, valor, es_servicio, cantidad_cuotas, cuotas_pagadas, valor_cuota } = req.body
+    console.log('req.body', req.body)
     const transaction = await sequel.transaction()
     try {
 
         let compra = producto.toUpperCase()
 
-        await compras.editar_compras(id, compra, valor, es_servicio, transaction)
-        await compras.editar_cuotas(id_cuotas, cantidad_cuotas, cuotas_pagadas, valor_cuota, transaction)
+        await compras.editar_compras(
+            id,
+            compra,
+            valor,
+            es_servicio,
+            (!es_servicio) ? cantidad_cuotas : null,
+            (!es_servicio) ? cuotas_pagadas : null,
+            (!es_servicio) ? valor_cuota : null,
+            transaction
+        )
 
         const deudor = await compras.obtener_deudor(id)
 
