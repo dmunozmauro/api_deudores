@@ -13,7 +13,7 @@ export const insertar_compras = async (req, res) => {
         const valida_producto = await compras.valida_compras(compra)
 
         if (valida_producto.length > 0) {
-            return res.status(200).send({ message: 'Ya existe compra ingresada' });
+            return res.status(200).send({ message: process.env.EXISTE_COMPRA });
         }
 
         await compras.insertar_compras(
@@ -77,7 +77,7 @@ export const consultar_compras = async (req, res) => {
             return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado, code: process.env.CODE_OK });
         }
 
-        return res.status(200).send({ message: 'No existen compras' });
+        return res.status(200).send({ message: process.env.NO_COMPRAS });
     } catch (e) {
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
@@ -94,7 +94,7 @@ export const consulta_compra = async (req, res) => {
             return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado, code: process.env.CODE_OK });
         }
 
-        return res.status(200).send({ message: 'No existen compras' });
+        return res.status(200).send({ message: process.env.NO_COMPRAS });
     } catch (e) {
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
@@ -106,6 +106,13 @@ export const eliminar_compras = async (req, res) => {
     const { id } = req.body
     const transaction = await sequel.transaction()
     try {
+
+        const valida_compra_asociada = await compras.obtener_deudor(id)
+
+        if (valida_compra_asociada.length > 0) {
+            return res.status(200).send({ message: 'Compra se encuentra asociada a deudor', code: process.env.CODE_NOK });
+        }
+
         await compras.eliminar_compras(id, transaction)
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
@@ -142,7 +149,7 @@ export const compras_no_asociadas = async (req, res) => {
             return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado, code: process.env.CODE_OK });
         }
 
-        return res.status(200).send({ message: 'No existen compras' });
+        return res.status(200).send({ message: process.env.NO_COMPRAS });
     } catch (e) {
         console.log(e.message);
         res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });

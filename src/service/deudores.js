@@ -12,7 +12,7 @@ export const insertar_deudores = async (req, res) => {
         const valida_deudor = await deudores.valida_deudor(nombre_deudor)
 
         if (valida_deudor.length > 0) {
-            return res.status(200).send({ message: 'Ya existe deudor ingresado', code: process.env.CODE_NOK });
+            return res.status(200).send({ message: process.env.EXISTE_DEUDOR, code: process.env.CODE_NOK });
         }
 
         await deudores.insertar_deudores(nombre_deudor, transaction)
