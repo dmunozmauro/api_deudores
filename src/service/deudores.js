@@ -12,17 +12,17 @@ export const insertar_deudores = async (req, res) => {
         const valida_deudor = await deudores.valida_deudor(nombre_deudor)
 
         if (valida_deudor.length > 0) {
-            return res.status(200).send({ message: 'Ya existe deudor ingresado', code: 2 });
+            return res.status(200).send({ message: 'Ya existe deudor ingresado', code: process.env.CODE_NOK });
         }
 
         await deudores.insertar_deudores(nombre_deudor, transaction)
         await transaction.commit()
-        return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
+        return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
     } catch (e) {
         await transaction.rollback()
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK, code: 2 });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
     }
 }
 
@@ -34,7 +34,7 @@ export const consultar_deudores = async (req, res) => {
 
     } catch (e) {
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
     }
 }
 
@@ -48,12 +48,12 @@ export const eliminar_deudores = async (req, res) => {
 
         // await deudores.eliminar_deudores(id, transaction)
         // await transaction.commit()
-        // return res.status(200).send({ message: process.env.MENSAJE_OK, code: 1 });
+        // return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
     } catch (e) {
         await transaction.rollback()
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK, cod: 2 });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
     }
 }
 
@@ -65,11 +65,11 @@ export const rel_deudor_compra = async (req, res) => {
     try {
         await deudores.rel_deudor_compra(id_deudor, id_compra, transaction)
         await transaction.commit()
-        return res.status(200).send({ message: process.env.MENSAJE_OK });
+        return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
     } catch (e) {
         await transaction.rollback()
         console.log(e.message);
-        res.status(500).send({ message: process.env.MENSAJE_NOK });
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
     }
 }
