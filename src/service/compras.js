@@ -6,8 +6,6 @@ export const insertar_compras = async (req, res) => {
     const { producto, valor, cantidad_cuotas, cuotas_pagadas, valor_cuota, es_servicio } = req.body
     const transaction = await sequel.transaction()
 
-    let id_cuota = null;
-
     try {
 
         let compra = producto.toUpperCase()
@@ -18,12 +16,16 @@ export const insertar_compras = async (req, res) => {
             return res.status(200).send({ message: 'Ya existe compra ingresada' });
         }
 
-        if (!es_servicio) {
-            id_cuota = await cuotas.insertar_cuotas(cantidad_cuotas, cuotas_pagadas, valor_cuota, transaction)
-            id_cuota = id_cuota[0][0].id
-        }
-
-        await compras.insertar_compras(compra, valor, id_cuota, es_servicio, transaction)
+        await compras.insertar_compras(
+            compra,
+            valor,
+            es_servicio,
+            (!es_servicio) ? cantidad_cuotas : null,
+            (!es_servicio) ? cuotas_pagadas : null,
+            (!es_servicio) ? valor_cuota : null,
+            transaction
+        
+            )
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
