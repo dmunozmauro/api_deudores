@@ -36,16 +36,6 @@ export const eliminar_deudores = async (id, t) => {
     });
 }
 
-export const eliminar_relacion_deudores_compras = async (id_deudor, t) => {
-    let query = `delete from rel_deudores_compras where id_deudor = $1`;
-
-    return await sequel.query(query, {
-        type: QueryTypes.DELETE,
-        transaction: t,
-        bind: [id_deudor]
-    });
-}
-
 
 export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
     // let query = `update tal_deudores set id_compra = $2 where id = $1`;

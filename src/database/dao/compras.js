@@ -83,7 +83,7 @@ export const eliminar_compras = async (id, t) => {
     });
 }
 
-export const eliminar_compra_deudor = async (id, t) => {
+export const eliminar_relacion_compra_deudor = async (id, t) => {
     let query = `delete from rel_deudores_compras where id_compra = $1`;
 
     return await sequel.query(query, {
@@ -139,7 +139,6 @@ export const valida_pendientes_compras = async (id_compra) => {
                     tc.id,
                     tc.producto,
                     tc.valor,
-                    tc.id_cuotas,
                     tc.es_servicio,
                     tc.cantidad_cuotas,
                     tc.cuotas_pagadas,

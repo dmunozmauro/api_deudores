@@ -40,7 +40,6 @@ export const editar_compras = async (req, res) => {
     console.log('SERVICE [editar_compras]')
 
     const { id, producto, valor, es_servicio, cantidad_cuotas, cuotas_pagadas, valor_cuota } = req.body
-    console.log('req.body', req.body)
     const transaction = await sequel.transaction()
     try {
 
@@ -123,7 +122,7 @@ export const eliminar_compra_deudor = async (req, res) => {
     const { id } = req.body
     const transaction = await sequel.transaction()
     try {
-        await compras.eliminar_compra_deudor(id, transaction)
+        await compras.eliminar_relacion_compra_deudor(id, transaction)
         await transaction.commit()
         return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
 
@@ -156,8 +155,6 @@ export const compras_realizadas_deudor = async (req, res) => {
 
     try {
         const listado = await compras.compras_realizadas_deudor(id)
-        console.log(listado)
-
         return res.status(200).send({ message: process.env.MENSAJE_OK, data: listado, code: process.env.CODE_OK });
 
     } catch (e) {

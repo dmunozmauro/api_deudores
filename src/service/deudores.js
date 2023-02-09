@@ -63,24 +63,26 @@ export const eliminar_deudores = async (req, res) => {
         }
 
         console.log('¿Se puede eliminar deudor?', eliminar_deudor);
-        return res.status(200).send({ message: 'PENDIENTE CODIGO', code: process.env.CODE_NOK });
 
-        /* if (eliminar_deudor) {
+        if (eliminar_deudor) {
             if (valida_pendientes_deudor.length != 0) {
 
-                valida_pendientes_deudor.map(async (deudor) => {
-                    await deudores.eliminar_relacion_deudores_compras(deudor.id_deudor, transaction)
-                })
+                Promise.all(valida_pendientes_deudor.map(deudor => {
+                    return compras.eliminar_relacion_compra_deudor(deudor.id_deudor, transaction)
+                }))
+
+                Promise.all(valida_pendientes_deudor.map(deudor => {
+                    return compras.eliminar_compras(deudor.id_compra, transaction)
+                }))
             }
 
             await deudores.eliminar_deudores(id, transaction)
 
-            await transaction.rollback()
-            // await transaction.commit()
+            await transaction.commit()
             return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
         } else {
             return res.status(200).send({ message: 'Deudor mantiene pagos pendientes', code: process.env.CODE_NOK });
-        } */
+        }
 
     } catch (e) {
         await transaction.rollback()
