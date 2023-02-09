@@ -13,5 +13,6 @@ router.delete('/eliminar-compras', compras.eliminar_compras)
 router.delete('/eliminar-compra-deudor', compras.eliminar_compra_deudor)
 router.get('/compras-no-asociadas', compras.compras_no_asociadas)
 router.get('/compras-realizadas-deudor/:id', compras.compras_realizadas_deudor)
+router.put('/actualizar-fecha-pago', compras.actualizar_fecha_pago)
 
 export default app

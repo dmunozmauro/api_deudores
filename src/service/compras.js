@@ -169,3 +169,20 @@ export const compras_realizadas_deudor = async (req, res) => {
         res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
     }
 }
+
+export const actualizar_fecha_pago = async (req, res) => {
+    console.log('SERVICE [actualizar_fecha_pago]')
+    const { id, ultima_fecha_pago } = req.body
+    const transaction = await sequel.transaction()
+
+    try {
+        await compras.actualizar_fecha_pago(id, ultima_fecha_pago, transaction)
+        await transaction.commit()
+
+        return res.status(200).send({ message: process.env.MENSAJE_OK, code: process.env.CODE_OK });
+    } catch (e) {
+        console.log(e.message);
+        await transaction.rollback()
+        res.status(500).send({ message: process.env.MENSAJE_NOK, code: process.env.CODE_NOK });
+    }
+}

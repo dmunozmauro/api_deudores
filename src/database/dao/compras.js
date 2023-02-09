@@ -44,7 +44,7 @@ export const consultar_compras = async () => {
                     tc.es_servicio,
                     tc.cantidad_cuotas,
                     tc.cuotas_pagadas,
-                    tc.ultima_fecha_pago,
+                    to_char(tc.ultima_fecha_pago, 'dd/mm/yyyy') as "ultima_fecha_pago",
                     case
                         when tc.valor_cuota is not null then tc.valor_cuota 
                         else tc.valor
@@ -62,7 +62,7 @@ export const consulta_compra = async (id) => {
                     tc.es_servicio,
                     tc.cantidad_cuotas,
                     tc.cuotas_pagadas,
-                    tc.ultima_fecha_pago,
+                    to_char(tc.ultima_fecha_pago, 'dd/mm/yyyy') as "ultima_fecha_pago",
                     case
                         when tc.valor_cuota is not null then tc.valor_cuota 
                         else tc.valor
@@ -100,7 +100,7 @@ export const compras_no_asociadas = async () => {
                     tc.valor,
                     tc.cantidad_cuotas,
                     tc.cuotas_pagadas,
-                    tc.ultima_fecha_pago
+                    to_char(tc.ultima_fecha_pago, 'dd/mm/yyyy') as "ultima_fecha_pago"
                 from tal_compras tc
                     left join rel_deudores_compras rdc on rdc.id_compra = tc.id
                 where rdc.id_compra is null
@@ -115,7 +115,7 @@ export const compras_realizadas_deudor = async (id) => {
                     tc.valor,
                     tc.cantidad_cuotas,
                     tc.cuotas_pagadas,
-                    tc.ultima_fecha_pago,
+                    to_char(tc.ultima_fecha_pago, 'dd/mm/yyyy') as "ultima_fecha_pago",
                     case
                         when tc.valor_cuota is not null then tc.valor_cuota 
                         else tc.valor
@@ -156,6 +156,16 @@ export const valida_pendientes_compras = async (id_compra) => {
     });
 
     return data[0]
+}
+
+export const actualizar_fecha_pago = async (id, ultima_fecha_pago, t) => {
+    let query = `update tal_compras set ultima_fecha_pago = $2 where id = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.UPDATE,
+        transaction: t,
+        bind: [id, ultima_fecha_pago]
+    });
 }
 
 
