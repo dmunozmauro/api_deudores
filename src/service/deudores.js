@@ -66,9 +66,8 @@ export const eliminar_deudores = async (req, res) => {
 
         if (eliminar_deudor) {
             if (valida_pendientes_deudor.length != 0) {
-
                 Promise.all(valida_pendientes_deudor.map(deudor => {
-                    return compras.eliminar_relacion_compra_deudor(deudor.id_deudor, transaction)
+                    return compras.eliminar_relacion_compra_deudor(deudor.id_compra, transaction)
                 }))
 
                 Promise.all(valida_pendientes_deudor.map(deudor => {
