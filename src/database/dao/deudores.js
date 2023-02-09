@@ -36,6 +36,16 @@ export const eliminar_deudores = async (id, t) => {
     });
 }
 
+export const eliminar_relacion_deudores_compras = async (id_deudor, t) => {
+    let query = `delete from rel_deudores_compras where id_deudor = $1`;
+
+    return await sequel.query(query, {
+        type: QueryTypes.DELETE,
+        transaction: t,
+        bind: [id_deudor]
+    });
+}
+
 
 export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
     // let query = `update tal_deudores set id_compra = $2 where id = $1`;
@@ -50,11 +60,10 @@ export const rel_deudor_compra = async (id_deudor, id_compra, t) => {
 
 
 export const valida_pendientes_deudor = async (id) => {
-    let query = `insert into rel_deudores_compras(id_deudor, id_compra) values($1, $2)`;
+    let query = `select * from rel_deudores_compras rdc where rdc.id_deudor = $1`;
 
     return await sequel.query(query, {
-        type: QueryTypes.INSERT,
-        transaction: t,
-        bind: [id_deudor, id_compra]
+        type: QueryTypes.SELECT,
+        bind: [id]
     });
 }

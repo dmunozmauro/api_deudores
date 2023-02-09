@@ -151,3 +151,31 @@ export const compras_realizadas_deudor = async (id) => {
 
     return data;
 }
+
+export const valida_pendientes_compras = async (id_compra) => {
+    let query = `select 
+                    tc.id,
+                    tc.producto,
+                    tc.valor,
+                    tc.id_cuotas,
+                    tc.es_servicio,
+                    tcu.cantidad_cuotas,
+                    tcu.cuotas_pagadas,
+                    tcu.valor_cuota,
+                    case
+                        when tcu.cuotas_pagadas < tcu.cantidad_cuotas then false
+                        else true
+                    end as deuda_terminada
+                from tal_compras tc 
+                    left join tal_cuotas tcu on tcu.id = tc.id_cuotas
+                where tc.id = $1`;
+
+    const data =  await sequel.query(query, {
+        type: QueryTypes.SELECT,
+        bind: [id_compra]
+    });
+
+    return data[0]
+}
+
+
