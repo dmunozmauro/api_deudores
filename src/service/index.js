@@ -3,13 +3,15 @@ import * as deudores from './deudores'
 import * as compras from './compras'
 import * as misCompras from '../service/personal/mis-compras'
 import * as instituciones from '../service/personal/instituciones'
+import * as situacionFinanciera from '../service/personal/situacion-financiera'
 
 export {
     prueba,
     deudores,
     compras,
     misCompras,
-    instituciones
+    instituciones,
+    situacionFinanciera
 }
 
 export default {
@@ -17,5 +19,6 @@ export default {
     deudores,
     compras,
     misCompras,
-    instituciones
+    instituciones,
+    situacionFinanciera
 }

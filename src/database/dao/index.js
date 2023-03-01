@@ -4,6 +4,7 @@ import * as compras from './compras'
 import * as cuotas from './cuotas'
 import * as misCompras from './personal/mis-compras'
 import * as instituciones from './personal/instituciones'
+import * as situacionFinanciera from './personal/situacion-financiera'
 
 export {
     prueba,
@@ -11,7 +12,8 @@ export {
     compras,
     cuotas,
     misCompras,
-    instituciones
+    instituciones,
+    situacionFinanciera
 }
 
 export default {
@@ -20,5 +22,6 @@ export default {
     compras,
     cuotas,
     misCompras,
-    instituciones
+    instituciones,
+    situacionFinanciera
 }

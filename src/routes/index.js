@@ -5,6 +5,7 @@ import deudores from './deudores'
 import compras from './compras'
 import misCompras from  './personal/mis-compras'
 import instituciones from  './personal/instituciones'
+import situacionFinanciera from  './personal/situacion-financiera'
 
 const app = express()
 
@@ -14,7 +15,8 @@ app.use(
     deudores,
     compras,
     misCompras,
-    instituciones
+    instituciones,
+    situacionFinanciera
 )
 
 export default app
