@@ -7,7 +7,7 @@ export const obtenerCompras = async (req, res) => {
     try {
         let data = []
 
-        const institucion = await instituciones.obtenerInstituciones()
+        const institucion = await instituciones.obtenerInstitucionesConDeudas()
 
         await Promise.all(
             institucion.map(async (i) => {
@@ -16,6 +16,7 @@ export const obtenerCompras = async (req, res) => {
                 data.push({
                     "id_institucion": i.id,
                     "nombre": i.nombre.toUpperCase(),
+                    "deuda_total": i.deuda_total,
                     "deudas": compras
                 })
 
